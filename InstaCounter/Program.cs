@@ -16,9 +16,10 @@ namespace InstaCounter
     {
         
         public static void Main(string[] args)
-        { 
+        {
             Datagetter datagetter = new Datagetter();
             CreateHostBuilder(args).Build().Run();
+
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

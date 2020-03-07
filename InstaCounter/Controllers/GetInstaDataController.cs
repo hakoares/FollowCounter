@@ -24,22 +24,8 @@ namespace InstaCounter.Controllers
         }
 
         [HttpGet]
-        public IList<Account> Get()
+        public void Get()
         {
-            Fetcher fetcher = new Fetcher();
-            fetcher.SetBaseUrl("http://46.101.178.129/user/");
-
-            IList<Account> listOfUsers = new List<Account>();
-            foreach (var user in Usernames)
-            {
-                var data = fetcher.Get(user);
-                Account account = JsonConvert.DeserializeObject<Account>(data);
-                listOfUsers.Add(account);
-                Console.WriteLine(account.ToString());
-            }
-
-            fetcher.Dispose();
-            return listOfUsers;
 
         }
     }
