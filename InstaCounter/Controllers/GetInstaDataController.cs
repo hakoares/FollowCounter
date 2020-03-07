@@ -17,16 +17,19 @@ namespace InstaCounter.Controllers
         };
 
         private readonly ILogger<GetInstaDataController> _logger;
+        private readonly ApiSettings _apiSettings;
 
-        public GetInstaDataController(ILogger<GetInstaDataController> logger)
+        public GetInstaDataController(ILogger<GetInstaDataController> logger, ApiSettings apiSettings)
         {
             _logger = logger;
+            _apiSettings = apiSettings;
         }
 
         [HttpGet]
         public void Get()
         {
-
+            Fetcher fetcher = new Fetcher(_apiSettings);
+            
         }
     }
 }

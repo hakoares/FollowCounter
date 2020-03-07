@@ -24,6 +24,9 @@ namespace InstaCounter
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            
+            services.AddSingleton(Configuration.GetSection("ApiSettings").Get<ApiSettings>());
+            
             // requires using Microsoft.Extensions.Options
             services.Configure<InstaHistoryDatabaseSettings>(
                 Configuration.GetSection(nameof(InstaHistoryDatabaseSettings)));
