@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Cryptography.Xml;
 using System.Threading.Tasks;
+using InstaCounter.Services;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
@@ -17,11 +18,13 @@ namespace InstaCounter.Data
     private static RestClient _client = new RestClient();
     private static string _authorization;
     private readonly ApiSettings _apiSettings;
+    private readonly AccountService _accountService;
 
 
-    public Fetcher(ApiSettings apiSettings, IList<Account> accounts)
+    public Fetcher(ApiSettings apiSettings, IList<Account> accounts, AccountService accountService)
     {
         _apiSettings = apiSettings;
+        _accountService = accountService;
 
         if (_authorization == null)
         {
@@ -50,7 +53,7 @@ namespace InstaCounter.Data
     }
     
     
-    public static async void Get (Account account)
+    private async void Get (Account account)
     {
         _client = new RestClient("http://46.101.178.129/");
         IRestRequest request;
@@ -76,15 +79,26 @@ namespace InstaCounter.Data
 
         var res =  await _client.ExecuteAsync(request);
         
-        // WRITE TO DATABASE
+        
         
         dynamic data = JObject.Parse(res.Content);
 
         int count = Convert.ToInt32(data.followers);
 
-        var mess = new Measurement(count);    
-        account.Measurements.Add(mess);
-        Console.Write(JsonConvert.SerializeObject(account));
+        var newMeasurement = new Measurement(count);    
+        var user = _accountService.Get(account.Username);
+        
+        if (user == null)
+        {
+            _accountService.Create(account);
+            user = _accountService.Get(account.Username);
+
+        }
+        
+        user.Measurements.Add(newMeasurement);
+        _accountService.Update(user);
+        Console.WriteLine("IG: " + JsonConvert.SerializeObject(_accountService.Get(Medium.INSTAGRAM)));
+        Console.WriteLine("TT: " + JsonConvert.SerializeObject(_accountService.Get(Medium.TIKTOK)));
     }
 
     }

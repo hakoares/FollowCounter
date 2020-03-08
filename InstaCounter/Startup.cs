@@ -26,7 +26,6 @@ namespace InstaCounter
         {
             
             services.AddSingleton(Configuration.GetSection("ApiSettings").Get<ApiSettings>());
-            services.AddSingleton<Datagetter>();
             
             // requires using Microsoft.Extensions.Options
             services.Configure<InstaHistoryDatabaseSettings>(

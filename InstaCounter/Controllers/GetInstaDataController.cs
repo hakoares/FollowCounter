@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using InstaCounter.Data;
+using InstaCounter.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using RestSharp;
 
 namespace InstaCounter.Controllers
 {
@@ -11,6 +13,8 @@ namespace InstaCounter.Controllers
     [Route("[controller]")]
     public class GetInstaDataController : ControllerBase
     {
+        
+        
         private static readonly string[] Usernames = new[]
         {
             "unglandsmote", "idaperny", "lisaborud", "hakonareskjold", "itro.no"
@@ -18,25 +22,26 @@ namespace InstaCounter.Controllers
 
         private readonly ILogger<GetInstaDataController> _logger;
         private readonly ApiSettings _apiSettings;
+        private readonly AccountService _accountService;
 
-        public GetInstaDataController(ILogger<GetInstaDataController> logger, ApiSettings apiSettings)
+        
+        public GetInstaDataController(ILogger<GetInstaDataController> logger, ApiSettings apiSettings, AccountService accountService)
         {
             _logger = logger;
             _apiSettings = apiSettings;
+            _accountService = accountService;
         }
 
         [HttpGet]
         public void Get()
         {
-            Datagetter datagetter = new Datagetter(_apiSettings);   
+
+            // var data = _accountService.Get();
+            // Console.WriteLine(JsonConvert.SerializeObject(data));
             
-            var a1 = new Account("hakonareskjold", Medium.INSTAGRAM);
-            var a2 = new Account("lasselom", Medium.INSTAGRAM);
-            
-            IList<Account> list = new List<Account>();
-            
-            list.Add(a1);
-            datagetter.Start(list);
+
+
+
         }
     }
 }

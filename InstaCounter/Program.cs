@@ -19,7 +19,17 @@ namespace InstaCounter
 
         public static void Main(string[] args)
         {
+            Datagetter datagetter = new Datagetter();
+            var a1 = new Account("hakonareskjold", Medium.INSTAGRAM);
+            var a2 = new Account("lasselom", Medium.INSTAGRAM);
+            var a3 = new Account("lasselom", Medium.TIKTOK);
             
+            IList<Account> list = new List<Account>();
+            
+            list.Add(a1);
+            list.Add(a2);
+            list.Add(a3);
+            datagetter.Start(list);            
             CreateHostBuilder(args).Build().Run();
 
         }
