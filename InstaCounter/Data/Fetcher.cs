@@ -12,14 +12,14 @@ using RestSharp;
 namespace InstaCounter.Data
 {
     public class Fetcher
-
     {
+        
     private static RestClient _client = new RestClient();
     private static string _authorization;
     private readonly ApiSettings _apiSettings;
 
 
-    public Fetcher(ApiSettings apiSettings)
+    public Fetcher(ApiSettings apiSettings, IList<Account> accounts)
     {
         _apiSettings = apiSettings;
 
@@ -27,10 +27,11 @@ namespace InstaCounter.Data
         {
             GetAccessToken();
         }
-        
-        Get("hakonareskjold", Medium.INSTAGRAM);
-        Get("lasselom", Medium.INSTAGRAM);
-        Get("lasselom", Medium.TIKTOK);
+
+        foreach (var account in accounts)
+        {
+            Get(account);
+        }
         
     }
 
@@ -49,21 +50,21 @@ namespace InstaCounter.Data
     }
     
     
-    public static async void Get (string username, Medium medium)
+    public static async void Get (Account account)
     {
         _client = new RestClient("http://46.101.178.129/");
         IRestRequest request;
         
-        switch (medium)
+        switch (account.Medium)
         {
             case Medium.TIKTOK:
                 request = new RestRequest("tt/{username}", Method.GET)
-                    .AddParameter("username", username, ParameterType.UrlSegment);
+                    .AddParameter("username", account.Username, ParameterType.UrlSegment);
                 break;
 
             case Medium.INSTAGRAM:
                 request = new RestRequest("ig/{username}", Method.GET)
-                    .AddParameter("username", username, ParameterType.UrlSegment);
+                    .AddParameter("username", account.Username, ParameterType.UrlSegment);
                 break;
 
             default:
@@ -76,8 +77,14 @@ namespace InstaCounter.Data
         var res =  await _client.ExecuteAsync(request);
         
         // WRITE TO DATABASE
-        Console.Write(res.Content);
+        
+        dynamic data = JObject.Parse(res.Content);
 
+        int count = Convert.ToInt32(data.followers);
+
+        var mess = new Measurement(count);    
+        account.Measurements.Add(mess);
+        Console.Write(JsonConvert.SerializeObject(account));
     }
 
     }

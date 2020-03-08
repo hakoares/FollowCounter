@@ -28,8 +28,15 @@ namespace InstaCounter.Controllers
         [HttpGet]
         public void Get()
         {
-            Fetcher fetcher = new Fetcher(_apiSettings);
+            Datagetter datagetter = new Datagetter(_apiSettings);   
             
+            var a1 = new Account("hakonareskjold", Medium.INSTAGRAM);
+            var a2 = new Account("lasselom", Medium.INSTAGRAM);
+            
+            IList<Account> list = new List<Account>();
+            
+            list.Add(a1);
+            datagetter.Start(list);
         }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using InstaCounter.Services;
@@ -16,16 +17,16 @@ namespace InstaCounter.Data
             _apiSettings = apiSettings;
         }
 
-        public void Start()
+        public void Start(IList<Account> accounts)
         {
             var startTimeSpan = TimeSpan.Zero;
             var periodTimeSpan = TimeSpan.FromMinutes(1);
             
             
+            
             var timer = new System.Threading.Timer((e) =>
             {
-                Console.WriteLine("KJØR");
-                Fetcher fetcher = new Fetcher(_apiSettings);
+                Fetcher fetcher = new Fetcher(_apiSettings, accounts);
                 
                 
             }, null, startTimeSpan, periodTimeSpan);

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using InstaCounter.Data;
 using InstaCounter.Services;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -18,18 +19,6 @@ namespace InstaCounter
 
         public static void Main(string[] args)
         {
-            
-            IServiceCollection services = new ServiceCollection();
-
-
-            services.AddSingleton(pr => pr.GetService<Datagetter>());
-            services.AddSingleton(
-                provider => new Datagetter(provider.GetService<ApiSettings>())
-            );
- 
-            var serviceProvider = services.BuildServiceProvider();
-            var instance = serviceProvider.GetService<Datagetter>();
-            instance.Start();
             
             CreateHostBuilder(args).Build().Run();
 
